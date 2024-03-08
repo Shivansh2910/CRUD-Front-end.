@@ -45,8 +45,7 @@
           ?>
   <form action="edit.php?id=<?php echo $row['ID']; ?>" method="post">
     <div class="form-group">
-      <label for="ID" class="form-label"><span style="color:black;font-weight:bold">ID</span></label>
-      <input type="integer" class="form-control" name="ID" placeholder="Enter your ID" value="<?php echo $row['ID'] ?>">
+      <input type="hidden" class="form-control" name="ID" placeholder="Enter your ID" value="<?php echo $row['ID'] ?>">    
     </div>
     <div class="form-group">
       <label for="name" class="form-label"><span style="color:black;font-weight:bold">Student Name:-</span></label>
@@ -66,70 +65,60 @@
     </div>
     <div class="form-group">
       <label for="class" class="form-label"><span style="color:black;font-weight:bold">Select Class:-</span></label>
-      <select class="form-select" name="class"  value="<?php echo $class ?>">
-        <option value="1st">1st</option>
-        <option value="2nd">2nd</option>
-        <option value="3rd">3rd</option>
-        <option value="4th">4th</option>
-        <option value="5th">5th</option>
-        <option value="6th">6th</option>
-        <option value="7th">7th</option>
-        <option value="8th">8th</option>
-        <option value="9th">9th</option>
-        <option value="10th">10th</option>
-        <option value="11th">11th</option>
-        <option value="12th">12th</option>
+      <select class="form-select" name="class"  value="<?php echo $_GET['class'] ?>" required>
+        <option value="1st" <?php if($class == '1st'){ ?> SELECTED <?php }?>>1st</option>
+        <option value="2nd" <?php if($class == '2nd'){ ?> SELECTED <?php }?>>2nd</option>
+        <option value="3rd" <?php if($class == '3rd'){ ?> SELECTED <?php }?>>3rd</option>
+        <option value="4th" <?php if($class == '4th'){ ?> SELECTED <?php }?>>4th</option>
+        <option value="5th" <?php if($class == '5th'){ ?> SELECTED <?php }?>>5th</option>
+        <option value="6th" <?php if($class == '6th'){ ?> SELECTED <?php }?>>6th</option>
+        <option value="7th" <?php if($class == '7th'){ ?> SELECTED <?php }?>>7th</option>
+        <option value="8th" <?php if($class == '8th'){ ?> SELECTED <?php }?>>8th</option>
+        <option value="9th" <?php if($class == '9th'){ ?> SELECTED <?php }?>>9th</option>
+        <option value="10th" <?php if($class == '10th'){ ?> SELECTED <?php }?>>10th</option>
+        <option value="11th" <?php if($class == '11th'){ ?> SELECTED <?php }?>>11th</option>
+        <option value="12th" <?php if($class == '12th'){ ?> SELECTED <?php }?>>12th</option>
       </select>
     </div>
     <label for="gender" class="form-label"><span style="color:black;font-weight:bold">Select Gender:-</span></label>
-      <div class="form-check" name="gender" value="<?php echo $gender ?>">
-          <input class="form-check-input" type="radio" name="gender" id="male" value="Male">
-          <label class="form-check-label" for="gridRadios1">
-            Male
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="gender" id="female" value="Female">
-          <label class="form-check-label" for="gridRadios2">
-            Female
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="gender" id="other" value="Other">
-          <label class="form-check-label" for="gridRadios3">
-          Other
-          </label>
-        </div>
-        <div class="form-group">
-         <label for="note" class="form-label"><span style="color:black;font-weight:bold">Note:-</span></label>
-         <textarea class="form-control" name="note" id="note" rows="5" placeholder="Add your Note Here" value="<?php echo $note ?>"></textarea>
-        </div>
-        <div class="form-group">
-         <label for="DOB" class="form-label"><span style="color:black;font-weight:bold">Date of Birth(DOB):-</span></label>
-         <input type="date" class="form-control" name="DOB" id="DOB" value="<?php echo $DOB ?>">
-        </div>
-        <div class="form-group">
-         <label for="Acc.CreatedOn" class="form-label"><span style="color:black;font-weight:bold">Account Created On:-</span></label>
-         <input type="datetime-local" class="form-control" name="AccCreatedOn" id="AccCreatedOn" value="<?php echo $AccCreatedOn ?>">
-        </div>
-        <div class="form-group">
-         <label for="status" class="form-label"><span style="color:black;font-weight:bold">Status:-</span></label>
+      <div class="form-check" name="gender" required>
+        <input class="form-check-input" type="radio" name="gender" id="male" value="Male" <?php if($gender == 'Male'){ ?> CHECKED <?php }?>>
+        <label class="form-check-label" for="gridRadios1">Male</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="gender" id="female" value="Female" <?php if($gender == 'Female'){ ?> CHECKED <?php }?>>
+        <label class="form-check-label" for="gridRadios2">Female</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="gender" id="other" value="Other" <?php if($gender == 'Others'){ ?> CHECKED <?php }?>>
+        <label class="form-check-label" for="gridRadios3">Other</label>
+      </div>
+      <div class="form-group">
+        <label for="note" class="form-label"><span style="color:black;font-weight:bold">Note:-</span></label>
+        <textarea class="form-control" name="note" id="note" rows="2" placeholder="Add your Note Here"><?php echo $note ?></textarea>
+      </div>
+      <div class="form-group">
+        <label for="DOB" class="form-label"><span style="color:black;font-weight:bold">Date of Birth(DOB):-</span></label>
+        <input type="date" class="form-control" name="DOB" id="DOB" value="<?php echo $DOB ?>">
+      </div>
+      <div class="form-group">
+        <label for="Acc.CreatedOn" class="form-label"><span style="color:black;font-weight:bold">Account Created On:-</span></label>
+        <input type="datetime-local" class="form-control" name="AccCreatedOn" id="AccCreatedOn" value="<?php echo $AccCreatedOn ?>">
+      </div>
+      <div class="form-group">
+        <label for="status" class="form-label"><span style="color:black;font-weight:bold">Status:-</span></label>
          <select class="form-select" name="status" value="<?php echo $status ?>">
-          <option value="Active">Active</option>
-          <option value="Inactive">Inactive</option>
+          <option value="Active" <?php if($status == 'Active'){ ?> SELECTED <?php }?>>Active</option>
+          <option value="Inactive" <?php if($status == 'Inactive'){ ?> SELECTED <?php }?>>Inactive</option>
          </select>
-        </div>
-        <div class="cform-group">
-         <label for="createdby" class="form-label"><span style="color:black;font-weight:bold">CreatedBy:-</span></label>
-         <input type="text" class="form-control" name="createdby" id="createdby" value="<?php echo $createdby ?>">
-        </div>
-        <div class="form-group">
-        <div class="form-check">
-         <input class="form-check-input" type="checkbox" id="termandcondition">
-         <label class="form-check-label" for="gridCheck"><span style="color:black;font-weight:bold">Terms and Conditions</span></label>
-        </div>
-         <button type="submit" class="btn btn-primary" name="submit" value="edit">Save</button>
-        </div>
+      </div>
+      <div class="form-group">
+        <label for="createdby" class="form-label"><span style="color:black;font-weight:bold">CreatedBy:-</span></label>
+        <input type="text" class="form-control" name="createdby" id="createdby" value="<?php echo $createdby ?>">
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary" name="submit" value="edit">Update Data</button>
+      </div>
   </form>
   <?php     
                   }
@@ -154,7 +143,7 @@
       $result = mysqli_query($conn, $sql);
        if($result){
           echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
-               <strong>Your details has been Successfully Added!</strong>
+               <strong>Data Successfully Updated</strong>
                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                <span aria-hidden="true">&times;</span>
                </button>
