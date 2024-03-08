@@ -1,3 +1,29 @@
+<?php
+// Connecting to the DB
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "shivansh2k24";
+
+// Creating a connection
+$conn = mysqli_connect($servername, $username, $password, $database);
+// if connection was not successful
+if (!$conn){
+    die("Failed to connect". mysqli_connect_error());
+}else{
+    echo "Connection was successful";
+}
+$limit =10;
+$page=isset($_GET['page']) ? $_GET['page'] : 1;
+$start=($page-1) * $limit;
+$result=$conn->query("SELECT * FROM userdetails LIMIT $start, $limit");
+$userdetails=$result->fetch_all(MYSQLI_ASSOC);
+
+$result1=$conn->query("SELECT count(id) as id FROM userdetails");
+$usercount=$result1->fetch_all(MYSQLI_ASSOC);
+$total=$usercount[0]['id'];
+$pages= ceil($total / $limit); 
+?>
 <html>
   <head>
       <!--Required meta tags-->
@@ -23,20 +49,6 @@
      $status = $_POST['status'];
      $createdby = $_POST['createdby'];
 
-// Connecting to the DB
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "shivansh2k24";
-
-// Creating a connection
-$conn = mysqli_connect($servername, $username, $password, $database);
-// if connection was not successful
-if (!$conn){
-    die("Failed to connect". mysqli_connect_error());
-}else{
-    echo "Connection was successful";
-}
 //submit data to DB
 // Sql query
 $sql = "INSERT INTO `userdetails` (`Name`, `FathersName`, `Phone.no`, `Email`, `Class`, `Gender`, `Note`, `DOB`, `Acc.CreatedOn`, `Status`, `Acc.CreatedBy`) 
@@ -57,7 +69,7 @@ else{
 ?>
   <div class="container mt-4">
   <h1>Fill Details</h1>
-<form action="regestration.php" method="post">
+  <form action="regestration.php" method="post">
     <div class="form-group">
       <label for="name" class="form-label"><span style="color:black;font-weight:bold">Student Name:-</span></label>
       <input type="text" class="form-control" name="name" id="name" placeholder="Enter your Name" required>
@@ -92,8 +104,8 @@ else{
         <option value="12th">12th</option>
       </select>
     </div>
-    <label for="gender" class="form-label" required><span style="color:black;font-weight:bold">Select Gender:-</span></label>
-      <div name="gender" id="gender" class="form-check">
+    <label for="gender" class="form-label"><span style="color:black;font-weight:bold">Select Gender:-</span></label>
+      <div name="gender" id="gender" required class="form-check">
           <input class="form-check-input" type="radio" name="gender" id="male" value="Male">
           <label class="form-check-label" for="gridRadios1">
             Male
@@ -112,8 +124,8 @@ else{
           </label>
         </div>
         <div class="form-group">
-         <label for="note" class="form-label" required><span style="color:black;font-weight:bold">Note:-</span></label>
-         <textarea class="form-control" name="note" id="note" rows="5" placeholder="Add your Note Here"></textarea>
+         <label for="note" class="form-label"><span style="color:black;font-weight:bold">Note:-</span></label>
+         <textarea class="form-control" name="note" id="note" rows="5" placeholder="Add your Note Here" required></textarea>
         </div>
         <div class="form-group">
          <label for="DOB" class="form-label"><span style="color:black;font-weight:bold">Date of Birth(DOB):-</span></label>
@@ -131,7 +143,7 @@ else{
           <option value="Inactive">Inactive</option>
          </select>
         </div>
-        <div class="cform-group">
+        <div class="form-group">
          <label for="createdby" class="form-label"><span style="color:black;font-weight:bold">CreatedBy:-</span></label>
          <input type="text" class="form-control" name="createdby" id="createdby" required>
         </div>
@@ -142,7 +154,7 @@ else{
         </div>
          <button type="submit" class="btn btn-primary">Submit</button>
         </div>
-</form>
+  </form>
    <?php
    // Sql query
      $sql = "SELECT * FROM `userdetails`";
@@ -151,16 +163,33 @@ else{
      $num = mysqli_num_rows($result);
      echo "<span style='color:black;font-weight:bold'>Total $num Datas are found in DB.</span>";
      echo "<br>";
-     /*
-      // Display the data returned by the sql query from DB
-       while($row = mysqli_fetch_assoc($result)){
-        echo $row['ID'] . $row['Name'] . $row['FathersName'] . $row['Phone.no'] . $row['Email'] . $row['Class'] . $row['Gender'] . $row['Note'] . $row['DOB'] . $row['Acc.CreatedOn'] . $row['Status'] . $row['Acc.CreatedBy'];
-         echo "<br>";
-      }
-     */
    ?>
 <!--Table of DB data on web page-->
 <div class="container">
+<div class="row">
+			<div class="col-md-10">
+				<nav aria-label="Page navigation">
+					<ul class="pagination">
+            <!--
+				    <li>
+				      <a href="regestration.php?page=<?= $Previous; ?>" aria-label="Previous">
+				        <span aria-hidden="true">&laquo; Previous</span>
+				      </a>
+				    </li>
+            --->
+				    <?php for($a = 1; $a<= $pages; $a++) : ?>
+				    	<li><a href="regestration.php?page=<?= $a; ?>"><?= $a; ?></a></li>
+				    <?php endfor; ?>
+            <!---
+				    <li>
+				      <a href="regestration.php?page=<?= $Next; ?>" aria-label="Next">
+				        <span aria-hidden="true">Next &raquo;</span>
+				      </a>
+				    </li>
+            --->
+				  </ul>
+				</nav>
+			</div>
 <table class="table">
   <thead>
     <tr>
@@ -180,7 +209,31 @@ else{
     </tr>
   </thead>
  <tbody>
-  <?php 
+ <?php foreach($userdetails as $userdetail) : ?>
+    <tr>
+      <td><?=$userdetail['ID']?></td>
+      <td><?=$userdetail['Name']?></td>
+      <td><?=$userdetail['FathersName']?></td>
+      <td><?=$userdetail['Phone.no']?></td>
+      <td><?=$userdetail['Email']?></td>
+      <td><?=$userdetail['Class']?></td>
+      <td><?=$userdetail['Gender']?></td>
+      <td><?=$userdetail['Note']?></td>
+      <td><?=$userdetail['DOB']?></td>
+      <td><?=$userdetail['Acc.CreatedOn']?></td>
+      <td><?=$userdetail['Status']?></td>
+      <td><?=$userdetail['Acc.CreatedBy']?></td>
+      <td>
+      <a href='edit.php?id=<?=$userdetail['ID']?>' class='btn btn-primary'>Edit</a> 
+      </td>
+      <td>
+      <a href='delete.php?id=<?=$userdetail['ID']?>' class='btn btn-danger'>Delete</a> 
+      </td>
+    </tr>
+  <?php endforeach; ?>
+
+  <?php
+  /* 
     $sql = "SELECT * FROM `userdetails`";
     $result = mysqli_query($conn, $sql);
       while($row = mysqli_fetch_assoc($result)){
@@ -205,54 +258,22 @@ else{
             </td>
           </tr>";
         } 
-        /*
-        //pagination----------
-        //database connection  
-         $conn = mysqli_connect('localhost', 'root', '','shivansh2k24');  
-          if (! $conn) {  
-           die("Connection failed" . mysqli_connect_error());  
-          }else {mysqli_select_db($conn, 'shivansh2k24');  
-          }
-        //define total number of results you want per page  
-          $results_per_page = 10;  
-  
-        //find the total number of results stored in the database  
-          $sql = "SELECT * FROM `userdetails`";
-          $result = mysqli_query($conn, $sql);   
-          $number_of_result = mysqli_num_rows($result);  
-  
-        //determine the total number of pages available  
-          $number_of_page = ceil ($number_of_result / $results_per_page);  
-  
-        //determine which page number visitor is currently on  
-          if (!isset ($_GET['page']) ) {  
-           $page = 1;  
-          } else {  
-           $page = $_GET['page'];  
-          }  
-  
-        //determine the sql LIMIT starting number for the results on the displaying page  
-          $page_first_result = ($page-1) * $results_per_page;  
-  
-        //retrieve the selected results from database   
-          $sql = "SELECT * FROM `userdetails` . $page_first_result . $results_per_page";  
-          $result = mysqli_query($conn, $sql);  
-      
-        //display the retrieved result on the webpage  
-          while ($row = mysqli_fetch_array($result)) {
-            echo $row['ID'] . $row['Name'] . $row['FathersName'] . $row['Phone.no'] . $row['Email'] . $row['Class'] . $row['Gender'] . $row['Note'] . $row['DOB'] . $row['Acc.CreatedOn'] . $row['Status'] . $row['Acc.CreatedBy'];
-            echo "<br>";    
-          }  
-  
-        //display the link of the pages in URL  
-          for($page = 1; $page<= $number_of_page; $page++) {  
-           echo '<a href = "index.php?page=' . $page . '">' . $page . ' </a>';  
-          }
-          */
+        */
   ?>
  </tbody>
 </table>
   </div>
+  <!---<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item disabled">
+      <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#">Next</a>
+    </li>
+  </ul>
+</nav>---->
     <!--ptional JavaScript-->
     <!--jQuery first, then Popper.js, then Bootstrap JS-->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
