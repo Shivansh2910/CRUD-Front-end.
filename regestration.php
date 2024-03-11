@@ -23,9 +23,27 @@ $result1=$conn->query("SELECT count(id) as id FROM userdetails");
 $usercount=$result1->fetch_all(MYSQLI_ASSOC);
 $total=$usercount[0]['id'];
 $pages= ceil($total / $limit); 
+
+$Previous = $page - 1;
+$Next = $page + 1;
 ?>
 <html>
   <head>
+        <style>
+          table {
+            border-collapse: collapse;
+            width: 100%;
+          }
+          
+          th, td {
+            text-align: left;
+            padding: 8px;
+          }
+          
+          tr:nth-child(odd) {
+            background-color: #F7DC6F;
+          }
+          </style>
       <!--Required meta tags-->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -36,6 +54,7 @@ $pages= ceil($total / $limit);
   </head>
 <body>
 <?php
+  
    if($_SERVER['REQUEST_METHOD'] == 'POST'){
      $name = $_POST['name'];
      $fathername = $_POST['fathername'];
@@ -165,33 +184,30 @@ else{
      echo "<br>";
    ?>
 <!--Table of DB data on web page-->
-<div class="container">
-<div class="row">
-			<div class="col-md-10">
+  <div class="container">
+    <div class="row">
+			<div class="form-group">
 				<nav aria-label="Page navigation">
 					<ul class="pagination">
-            <!--
-				    <li>
-				      <a href="regestration.php?page=<?= $Previous; ?>" aria-label="Previous">
-				        <span aria-hidden="true">&laquo; Previous</span>
-				      </a>
-				    </li>
-            --->
+          <li class="page-item"><a class="page-link" href="regestration.php?page=<?= $Previous; ?>" aria-label="Nrevious">Previous</span></a></li>
 				    <?php for($a = 1; $a<= $pages; $a++) : ?>
-				    	<li><a href="regestration.php?page=<?= $a; ?>"><?= $a; ?></a></li>
+				    	<li class="page-item"><a class="page-link" href="regestration.php?page=<?= $a; ?>"><?= $a; ?></a></li>
 				    <?php endfor; ?>
-            <!---
-				    <li>
-				      <a href="regestration.php?page=<?= $Next; ?>" aria-label="Next">
-				        <span aria-hidden="true">Next &raquo;</span>
-				      </a>
-				    </li>
-            --->
+            <li class="page-item"><a class="page-link" href="regestration.php?page=<?= $Next; ?>" aria-label="Next">Next</a></li>
+            <div>
+              <form action="" class="form-group">
+                <input type="text" class="form-control" type="search" name="search" value="<?php if(isset($_GET['search'])){echo $_GET['search']; } ?>" placeholder="Serch Here">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              </form>
+            </div>
 				  </ul>
 				</nav>
-			</div>
-<table class="table">
-  <thead>
+		  </div>
+    </div>
+  <div class="row">
+  <div class="form-group">
+   <table border="4px" width="400px" class="table">
+   <thead>
     <tr>
       <th scope="col">ID</th>
       <th scope="col">Name</th>
@@ -205,10 +221,53 @@ else{
       <th scope="col">Acc.CreatedOn</th>
       <th scope="col">Status</th>
       <th scope="col">Acc.CreatedBy</th>
-      <th scope="col">Actions</th>
+      <th colspan="2" scope="col">Actions</th>
     </tr>
-  </thead>
+   </thead>
+  </div>
+  </div>
  <tbody>
+ <?php
+   $conn= mysqli_connect("localhost","root","","shivansh2k24");
+    if(isset($_GET['search'])){
+      $filtervalue = $_GET['search'];
+      $sql ="SELECT * FROM `userdetails` WHERE CONCAT(ID,Name,FathersName,Email,Class,Gender,Note,DOB,Status) LIKE '%$filtervalue%' ";
+      $sql_run = mysqli_query($conn,$sql);
+      if(mysqli_num_rows($sql_run) > 0){
+      foreach($sql_run as $item){
+  ?>
+        <tr>
+         <td><?=$item['ID']?></td>
+         <td><?=$item['Name']?></td>
+         <td><?=$item['FathersName']?></td>
+         <td><?=$item['Phone.no']?></td>
+         <td><?=$item['Email']?></td>
+         <td><?=$item['Class']?></td>
+         <td><?=$item['Gender']?></td>
+         <td><?=$item['Note']?></td>
+         <td><?=$item['DOB']?></td>
+         <td><?=$item['Acc.CreatedOn']?></td>
+         <td><?=$item['Status']?></td>
+         <td><?=$item['Acc.CreatedBy']?></td>
+         <td>
+         <a href='edit.php?id=<?=$item['ID']?>' class='btn btn-primary'>Edit</a> 
+         </td>
+         <td>
+         <a href='delete.php?id=<?=$item['ID']?>' class='btn btn-danger'>Delete</a> 
+         </td>
+        </tr>
+        <?php 
+      }
+      }else{
+        ?>
+        <tr>
+         <td colspan="13">NO Data found</td>
+        </tr>
+        <?php
+      }
+    }
+ ?>
+
  <?php foreach($userdetails as $userdetail) : ?>
     <tr>
       <td><?=$userdetail['ID']?></td>
