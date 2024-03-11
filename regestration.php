@@ -186,8 +186,8 @@ else{
 <!--Table of DB data on web page-->
   <div class="container">
     <div class="row">
-			<div class="form-group">
-				<nav aria-label="Page navigation">
+	<div class="form-group">
+	<nav aria-label="Page navigation">
 					<ul class="pagination">
           <li class="page-item"><a class="page-link" href="regestration.php?page=<?= $Previous; ?>" aria-label="Nrevious">Previous</span></a></li>
 				    <?php for($a = 1; $a<= $pages; $a++) : ?>
